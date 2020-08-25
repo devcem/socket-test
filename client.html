@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Client web socket</title>
+	<script type="text/javascript">
+		let socket = new WebSocket("ws://localhost:8080");
+
+		socket.onopen = function(){
+			console.log('Connected to the server!');
+		};
+
+		socket.onmessage = function(result){
+			var data = JSON.parse(result.data);
+
+			if(data.action == 'request-username'){
+				var username = prompt("Enter your username", "");
+
+				socket.send(JSON.stringify({ action : 'set-username', username : username }));
+			}
+
+			if(data.action == 'players-list'){
+				console.log(data.players);
+			}
+		};
+	</script>
+</head>
+<body>
+	
+</body>
+</html>
