@@ -1,5 +1,6 @@
 const WebSocket = require('ws');
 const shellExec   = require('shell-exec');
+const fs          = require('fs');
 
 let ws   = false;
 let http = false;
