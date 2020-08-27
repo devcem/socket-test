@@ -1,16 +1,18 @@
 const WebSocket = require('ws');
 const express = require('express');
-const http = require('http');
-const app     = express();
 const { createWebSocketStream } = require('ws');
-var SERVER_PORT = 2053;
+var SERVER_PORT = 8080;
  
 
-var _server = http.createServer(app).listen(SERVER_PORT, function() {
-    console.log('Express server listening on port ' + SERVER_PORT);
-});
+app   = require('express')();
+http  = require('http').Server();
 
-const WebSocketServer = new WebSocket.Server({ port: SERVER_PORT, server : _server });
+
+const WebSocketServer = new WebSocket.Server({ port : SERVER_PORT });
+
+http.listen(443, function(){
+    
+});
 
 const server = {
     players : []
