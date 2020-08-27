@@ -1,7 +1,8 @@
 const WebSocket = require('ws');
+const express = require('express');
 const { createWebSocketStream } = require('ws');
  
-const WebSocketServer = new WebSocket.Server({ port: 8080 });
+const WebSocketServer = new WebSocket.Server({ port: 2053, server : server });
 
 const server = {
     players : []
