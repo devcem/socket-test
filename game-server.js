@@ -1,24 +1,53 @@
 const WebSocket = require('ws');
-const express = require('express');
-const { createWebSocketStream } = require('ws');
-var SERVER_PORT = 8080;
- 
+const shellExec   = require('shell-exec');
 
-app   = require('express')();
-http  = require('http').Server();
+let ws   = false;
+let http = false;
+let app  = false;
 
+var isSSL = true;
 
-const WebSocketServer = new WebSocket.Server({ port : SERVER_PORT });
+if(!isSSL){
+    app   = require('express')();
+    http  = require('http').Server();
 
-http.listen(443, function(){
-    
-});
+    //ws    = new WebSocket.Server({ port : 8080 });
+
+    ws = new WebSocket.Server({ port: 8080 });
+}else{
+    let keyFileURI  = '';
+    let certFileURI = '';
+
+    //find certs
+    shellExec('ls /etc/letsencrypt/live/*/privkey.pem').then(function(result){
+        keyFileURI = result.stdout.trim();
+
+        shellExec('ls /etc/letsencrypt/live/*/fullchain.pem').then(function(result){
+            certFileURI = result.stdout.trim();
+
+            let options = {
+                key  : fs.readFileSync(keyFileURI),
+                cert : fs.readFileSync(certFileURI)
+            };
+
+            app   = require('express')();
+            http  = require('https').Server(options, app);
+            ws    = new WebSocket.Server({ server : http });
+
+            serverURL = keyFileURI;
+
+            http.listen(443, function(){
+                server.init();
+            });
+        });
+    });
+}
 
 const server = {
     players : []
 };
 
-WebSocketServer.on('connection', function(socket, ws){
+ws.on('connection', function(socket, ws){
     console.log('A user connected!');
 
     var id = Math.floor(Math.random() * 10000000);
